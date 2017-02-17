@@ -40,8 +40,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AChocoCommand.cs" />
     <Compile Include="Choco.cs" />
     <Compile Include="ChocoCommands.cs" />
+    <Compile Include="ChocoListCommand.cs" />
     <Compile Include="CommandBuilder.cs" />
     <Compile Include="DefaultArguments.cs" />
     <Compile Include="ProgramInfo.cs" />
