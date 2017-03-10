@@ -5,8 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Chocolatey {
-    public class ProgramInfo {
+    public class ListItem {
         public String Name { get; internal set; }
         public Version Version { get; internal set; }
+        public bool Approved { get; internal set; }
+        public String Comment { get; internal set; }
     }
 }

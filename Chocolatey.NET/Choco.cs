@@ -7,22 +7,36 @@ using System.Threading.Tasks;
 
 namespace Chocolatey
 {
-    public class Choco
+    public abstract class Choco
     {
-        internal const String CHOCO_COMMAND = "choco";
+        internal const String CHOCO_COMMAND = "choco.exe";
 
-        private String chocoPath;
 
-        public Choco(string chocoPath = null) {
-            this.chocoPath = chocoPath;
+        public static ChocoOutdatedCommand CreateOutdatedCommand()
+        {
+            ChocoOutdatedCommand cmd = new ChocoOutdatedCommand();
+            return cmd;
         }
 
-        public ChocoListCommand CreateListCommand(String filter = null, bool localOnly = false) {
+        public static ChocoListCommand CreateListCommand(String filter = null, bool localOnly = false, int? page = null, int pageSize = 25) {
             ChocoListCommand cmd = new ChocoListCommand();
+
+            cmd.Filter = filter;
+            cmd.LocalOnly = localOnly;
+            cmd.Page = page;
+            cmd.PageSize = pageSize;
 
             return cmd;
         }
 
+
+
+        public static ChocoUpgradeCommand CreateUpgradeCommand(String[] packages)
+        {
+            ChocoUpgradeCommand cmd = new ChocoUpgradeCommand();
+            cmd.Packages = packages;
+            return cmd;
+        }
 
     }
 }

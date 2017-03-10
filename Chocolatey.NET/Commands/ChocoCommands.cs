@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace Chocolatey {
     internal enum ChocoCommands {
-        list
+        list,
+        upgrade    
+
     }
 }

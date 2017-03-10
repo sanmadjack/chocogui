@@ -40,13 +40,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AChocoCommand.cs" />
+    <Compile Include="Commands\AChocoCommand.cs" />
     <Compile Include="Choco.cs" />
-    <Compile Include="ChocoCommands.cs" />
-    <Compile Include="ChocoListCommand.cs" />
+    <Compile Include="Commands\ChocoCommands.cs" />
+    <Compile Include="Commands\ChocoOutdatedCommand.cs" />
+    <Compile Include="Commands\ChocoUpgradeCommand.cs" />
+    <Compile Include="Commands\ChocoListCommand.cs" />
     <Compile Include="CommandBuilder.cs" />
+    <Compile Include="Data\OutdatedItem.cs" />
     <Compile Include="DefaultArguments.cs" />
-    <Compile Include="ProgramInfo.cs" />
+    <Compile Include="Data\ListItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

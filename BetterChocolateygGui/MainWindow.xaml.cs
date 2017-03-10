@@ -15,29 +15,104 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Chocolatey;
+using System.ComponentModel;
 
 namespace BetterChocolateygGui {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : RibbonWindow {
-        ObservableCollection<ProgramInfo> programs = new ObservableCollection<ProgramInfo>();
+    public partial class MainWindow : RibbonWindow, INotifyPropertyChanged
+    {
+        private bool _Working = false;
+        public bool IsNotWorking
+        {
+            get { return !_Working; }
+        }
+        public bool IsWorking
+        {
+            get { return _Working; }
+            private set
+            {
+                _Working = value;
+                NotifyPropertyChanged("IsWorking");
+                NotifyPropertyChanged("IsNotWorking");
+            }
+        }
 
+        private Model model
+        {
+            get
+            {
+                return (Model)this.DataContext;
+            }
+        }
+
+        public bool AdminMode { get; set; }
 
         public MainWindow() {
+            AdminMode = false;
             InitializeComponent();
-            programListView.DataContext = programs;
+            model.ConsoleUpdated += Model_ConsoleUpdated;
+            model.DispatchTarget = programListView.Dispatcher;
+        }
+
+        private void Model_ConsoleUpdated(object sender, ConsoleUpdatedEventArgs e)
+        {
+            this.consoleOutput.Dispatcher.Invoke(() =>
+            {
+                this.consoleOutput.AppendText(e.Output + Environment.NewLine);
+                this.consoleOutput.ScrollToEnd();
+            });
         }
 
         private async void Refresh()  {
-            Choco choco = new Choco();
-            programs.Clear();
-            List<ProgramInfo> data = choco.List(localOnly: true);
-            foreach() {
-
+            IsWorking = true;
+            try
+            {
+                await model.Refresh();
+            } finally
+            {
+                IsWorking = false;
             }
         }
 
 
+
+        private void RibbonWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            Refresh();
+        }
+
+
+        #region INotify Implementation
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void NotifyPropertyChanged(String propertyName = "")
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        #endregion
+
+        private void refreshButton_Click(object sender, RoutedEventArgs e)
+        {
+            Refresh();
+        }
+
+        private async void upgradeAllButton_Click(object sender, RoutedEventArgs e)
+        {
+            IsWorking = true;
+            try
+            {
+                await model.UpgradeAll();
+            } finally
+            {
+                IsWorking = false;
+            }
+        }
     }
 }

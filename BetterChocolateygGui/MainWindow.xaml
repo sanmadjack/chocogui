@@ -7,22 +7,61 @@
         xmlns:coll="clr-namespace:System.Collections.ObjectModel;assembly=System"
 
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="Chocolatey .NET GUI" Height="571.733" Width="958.523" Loaded="RibbonWindow_Loaded" 
+              IsEnabled="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsNotWorking, Mode=OneWay}">
+    <Window.DataContext>
+        <local:Model></local:Model>
+    </Window.DataContext>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="150" />
+            <RowDefinition Height="140" />
             <RowDefinition  />
+            <RowDefinition Height="32" />
         </Grid.RowDefinitions>
-        <Ribbon Grid.Row="0">
-
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Ribbon Grid.Row="0" Grid.ColumnSpan="4">
+            <RibbonTab Header="Operations">
+                <RibbonGroup>
+                    <RibbonButton Label="Refresh" Name="refreshButton" Click="refreshButton_Click" LargeImageSource="images/loop-circular-8x.png" >
+                    </RibbonButton>
+                </RibbonGroup>
+                <RibbonGroup>
+                    <RibbonButton Label="Upgrade All" Name="upgradeAllButton" Click="upgradeAllButton_Click"
+                                  IsEnabled="{Binding Path=UpgradesAvailable}"  LargeImageSource="images/loop-circular-8x.png" >
+                    </RibbonButton>
+                </RibbonGroup>
+            </RibbonTab>
         </Ribbon>
-        <ListView x:Name="programListView"  Grid.Row="1" ItemsSource="{Binding}">
+        <ListView Grid.Row="1"  x:Name="programListView"  ItemsSource="{Binding}" Grid.ColumnSpan="2">
+            <ListView.Resources>
+                <Style TargetType="ListViewItem">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=UpdateAvailable}" Value="True">
+                            <Setter Property="Background" Value="LightYellow" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ListView.Resources>
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Path=Name}"  />
-                    <GridViewColumn Header="Version" DisplayMemberBinding="{Binding Path=Version}"  />
+                    <GridViewColumn Header="Name" Width="200" DisplayMemberBinding="{Binding Path=Name}"  />
+                    <GridViewColumn Header="Installed Version" Width="100" DisplayMemberBinding="{Binding Path=InstalledVersion}"  />
+                    <GridViewColumn Header="Latest Version" Width="100" DisplayMemberBinding="{Binding Path=LatestVersion}"  />
                 </GridView>
             </ListView.View>
         </ListView>
+        <GridSplitter Grid.Row="1" Grid.Column="2" Width="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+
+        </GridSplitter>
+        <Expander Grid.Row="1" Grid.Column="3" ExpandDirection="Right" IsExpanded="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <TextBox x:Name="consoleOutput" Width="400"  HorizontalAlignment="Stretch" TextWrapping="NoWrap" Text="" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Auto"  ScrollViewer.VerticalScrollBarVisibility="Auto" FontFamily="Courier New" Background="Black" Foreground="Lime" SelectionBrush="Blue" />
+        </Expander>
+        <StatusBar Grid.Row="4" Grid.ColumnSpan="3">
+            <ResizeGrip />
+        </StatusBar>
     </Grid>
 </RibbonWindow>
